@@ -49,7 +49,7 @@ export default function DropZone({ onFileSelect, onLoadSample, error, setError }
   };
 
   return (
-    <div className="mx-auto w-full max-w-2xl px-4 py-16">
+    <div className="mx-auto w-full max-w-2xl px-4 py-4 md:py-8">
       {/* Drop Zone Box */}
       <div
         onDragEnter={handleDrag}
@@ -94,7 +94,7 @@ export default function DropZone({ onFileSelect, onLoadSample, error, setError }
           Upload your Markdown file
         </h3>
         <p className="mb-6 max-w-sm text-sm text-zinc-500 dark:text-zinc-400">
-          Drag and drop your <span className="font-mono bg-zinc-100 dark:bg-zinc-850 px-1 py-0.5 rounded text-xs font-semibold text-zinc-700 dark:text-zinc-300">.md</span> file here, or click to browse.
+          Drag and drop your <span className="font-mono bg-zinc-200/65 dark:bg-zinc-800 px-1.5 py-0.5 rounded text-xs font-semibold text-zinc-700 dark:text-zinc-300">.md</span> file here, or click to browse.
         </p>
 
         <button

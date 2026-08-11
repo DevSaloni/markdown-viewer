@@ -85,7 +85,7 @@ export default function MetadataBar({
   };
 
   return (
-    <div className="flex flex-col gap-4 border-b border-zinc-200 bg-zinc-50 px-6 py-4 dark:border-zinc-800 dark:bg-zinc-900/50 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 border-b border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900/50 sm:px-6 sm:py-4 sm:flex-row sm:items-center sm:justify-between">
       {/* File Info / Meta details */}
       <div className="flex flex-col gap-1.5 min-w-0">
         <div className="flex items-center gap-2">
@@ -119,9 +119,9 @@ export default function MetadataBar({
       </div>
 
       {/* Control Buttons */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Toggle Panel Mode (Hidden on small mobile screens since it will default to preview) */}
-        <div className="hidden items-center rounded-lg bg-zinc-200/60 p-0.5 dark:bg-zinc-800 sm:flex">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        {/* Toggle Panel Mode — visible on all screens */}
+        <div className="flex items-center rounded-lg bg-zinc-200/60 p-0.5 dark:bg-zinc-800">
           <button
             type="button"
             onClick={() => setViewMode('split')}
@@ -227,7 +227,7 @@ export default function MetadataBar({
               <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
               <path d="M8 21H3v-5" />
             </svg>
-            <span className="hidden sm:inline">Upload New</span>
+            <span>Upload New</span>
           </button>
         </div>
       </div>

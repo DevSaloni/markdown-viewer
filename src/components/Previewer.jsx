@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -50,6 +50,85 @@ class MarkdownErrorBoundary extends React.Component {
   }
 }
 
+// Custom Component to handle individual code block copying and state feedback
+function CodeBlock({ className, children, ...props }) {
+  const [copied, setCopied] = useState(false);
+  const match = /language-(\w+)/.exec(className || '');
+  const language = match ? match[1] : 'text';
+
+  const handleCopy = async () => {
+    const codeText = typeof children === 'string'
+      ? children
+      : Array.isArray(children)
+        ? children.map(child => typeof child === 'string' ? child : '').join('')
+        : String(children);
+
+    try {
+      await navigator.clipboard.writeText(codeText.replace(/\n$/, ''));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy code block:', err);
+    }
+  };
+
+  return (
+    <div className="my-6 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-950 dark:border-zinc-850 dark:bg-zinc-900 shadow-sm">
+      {/* Header Bar */}
+      <div className="flex items-center justify-between border-b border-zinc-200/50 bg-zinc-50/50 px-4 py-2 dark:border-zinc-800/80 dark:bg-zinc-950/80">
+        <span className="font-mono text-xs font-semibold text-zinc-500 uppercase tracking-wider dark:text-zinc-400">
+          {language}
+        </span>
+        <button
+          onClick={handleCopy}
+          type="button"
+          className={`transition-colors p-1 rounded hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 ${
+            copied ? 'text-green-500' : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200'
+          }`}
+          title={copied ? 'Copied!' : 'Copy Code'}
+        >
+          {copied ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-3.5 w-3.5"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="h-3.5 w-3.5"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          )}
+        </button>
+      </div>
+      {/* Pre container */}
+      <div className="overflow-x-auto p-4">
+        <pre className="font-mono text-sm leading-relaxed text-zinc-850 dark:text-zinc-150">
+          <code className={className} {...props}>
+            {children}
+          </code>
+        </pre>
+      </div>
+    </div>
+  );
+}
+
 export default function Previewer({ markdownText, previewRef }) {
   // Custom element renderers for Tailwind integration & scrollability
   const customRenderers = {
@@ -68,7 +147,6 @@ export default function Previewer({ markdownText, previewRef }) {
       const cleanProps = { ...props };
       delete cleanProps.node;
       const { className, children } = props;
-      const match = /language-(\w+)/.exec(className || '');
       const isInline = !className;
 
       if (isInline) {
@@ -82,46 +160,7 @@ export default function Previewer({ markdownText, previewRef }) {
         );
       }
 
-      const language = match ? match[1] : '';
-
-      return (
-        <div className="my-6 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-950 dark:border-zinc-850 dark:bg-zinc-900 shadow-sm">
-          {/* Header Bar */}
-          <div className="flex items-center justify-between border-b border-zinc-200/50 bg-zinc-50/50 px-4 py-2 dark:border-zinc-800/80 dark:bg-zinc-950/80">
-            <span className="font-mono text-xs font-semibold text-zinc-500 uppercase tracking-wider dark:text-zinc-400">
-              {language || 'text'}
-            </span>
-            <button
-              onClick={() => navigator.clipboard.writeText(String(children).replace(/\n$/, ''))}
-              type="button"
-              className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1"
-              title="Copy Code"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-3.5 w-3.5"
-              >
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
-            </button>
-          </div>
-          {/* Pre container */}
-          <div className="overflow-x-auto p-4">
-            <pre className="font-mono text-sm leading-relaxed text-zinc-850 dark:text-zinc-150">
-              <code className={className} {...cleanProps}>
-                {children}
-              </code>
-            </pre>
-          </div>
-        </div>
-      );
+      return <CodeBlock className={className} {...cleanProps}>{children}</CodeBlock>;
     },
     // Standard target="_blank" safety implementation for hyperlinks
     a: (props) => {

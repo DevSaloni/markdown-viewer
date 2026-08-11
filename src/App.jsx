@@ -18,7 +18,11 @@ export default function App() {
     }
     return 'light';
   });
-  const [viewMode, setViewMode] = useState('split'); // 'split' | 'preview' | 'raw'
+  const [viewMode, setViewMode] = useState(() => {
+    // Default to 'preview' on mobile, 'split' on desktop
+    if (typeof window !== 'undefined' && window.innerWidth < 768) return 'preview';
+    return 'split';
+  });
   const [error, setError] = useState(null);
 
   const previewRef = useRef(null);
@@ -71,7 +75,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 text-zinc-900 transition-colors duration-200 dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="flex h-screen flex-col bg-zinc-50 text-zinc-900 transition-colors duration-200 dark:bg-zinc-950 dark:text-zinc-100 overflow-hidden">
       {/* App Header */}
       <Header theme={theme} toggleTheme={toggleTheme} />
 
