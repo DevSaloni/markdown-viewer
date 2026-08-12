@@ -83,7 +83,7 @@ export default function App() {
       <main className="flex flex-1 flex-col min-h-0 overflow-hidden">
         {markdownText ? (
           // Success State - Show Markdown Viewer Dashboard
-          <div className="flex flex-1 flex-col min-h-0 overflow-hidden">
+          <div className="flex flex-1 flex-col min-h-0 overflow-hidden animate-fade-in">
             {/* Metadata and Controls Header */}
             <MetadataBar
               fileName={fileName}
@@ -100,7 +100,7 @@ export default function App() {
               {/* Raw Monospace Source Pane */}
               {(viewMode === 'raw' || viewMode === 'split') && (
                 <div
-                  className={`flex-1 flex flex-col overflow-hidden border-r border-zinc-200 dark:border-zinc-800 ${
+                  className={`flex-1 flex flex-col overflow-hidden border-r border-zinc-200 dark:border-zinc-800 animate-fade-in ${
                     viewMode === 'split' ? 'hidden md:flex' : 'flex'
                   }`}
                 >
@@ -117,7 +117,7 @@ export default function App() {
 
               {/* Rendered Preview Pane */}
               {(viewMode === 'preview' || viewMode === 'split') && (
-                <div className="flex-1 overflow-y-auto min-w-0">
+                <div className="flex-1 overflow-y-auto min-w-0 animate-fade-in">
                   <Previewer markdownText={markdownText} previewRef={previewRef} />
                 </div>
               )}
@@ -125,7 +125,7 @@ export default function App() {
           </div>
         ) : (
           // Empty State - Show Drag & Drop Area
-          <div className="flex flex-1 items-center justify-center p-6 md:p-12 overflow-y-auto">
+          <div className="flex flex-1 items-center justify-center p-6 md:p-12 overflow-y-auto animate-fade-in">
             <DropZone
               onFileSelect={handleFileSelect}
               onLoadSample={handleLoadSample}

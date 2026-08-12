@@ -283,3 +283,36 @@ html, body {
 .dark .prose-previewer hr {
   border-top-color: #27272a;
 }
+
+/* Global Theme Transitions for fluid dark-mode toggle */
+html, body, #root, header, main, div, textarea, button, p, span, a, h1, h2, h3, h4, h5, h6, table, th, td, code, pre {
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smooth scrolling on all pane scrollbars */
+textarea, 
+.overflow-y-auto,
+.overflow-x-auto {
+  scroll-behavior: smooth;
+}
+
+/* Fade-in animations for view switching and page mounts */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
